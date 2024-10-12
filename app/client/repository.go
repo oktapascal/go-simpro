@@ -155,7 +155,8 @@ func (rpo *Repository) GetClientsNoPagination(ctx context.Context, tx *sql.Tx) *
 		else 'NONE' 
 	end as status
 	from clients 
-	where deleted_at is null`
+	where deleted_at is null
+	order by created_at asc, updated_at desc`
 
 	rows, err := tx.QueryContext(ctx, query)
 	if err != nil {
