@@ -147,8 +147,15 @@ func (rpo *Repository) GetAllClients(ctx context.Context, tx *sql.Tx, params *he
 	return &clients
 }
 
-func (rpo *Repository) GetClientsNoPagination(ctx context.Context, tx *sql.Tx) *[]model.Client {
-	query := "select id, name, phone, address from clients where deleted_at is null"
+func (rpo *Repository) GetClientsNoPagination(ctx context.Context, tx *sql.Tx) *[]model.ClientResult {
+	query := `select id, name, phone, address, 
+    case
+		when timestampdiff(minute, created_at, now()) <= 10 then 'CREATED'
+		when timestampdiff(minute, updated_at, now()) <= 10 then 'UPDATED'
+		else 'NONE' 
+	end as status
+	from clients 
+	where deleted_at is null`
 
 	rows, err := tx.QueryContext(ctx, query)
 	if err != nil {
@@ -162,10 +169,10 @@ func (rpo *Repository) GetClientsNoPagination(ctx context.Context, tx *sql.Tx) *
 		}
 	}()
 
-	var clients []model.Client
+	var clients []model.ClientResult
 	for rows.Next() {
-		var client model.Client
-		err = rows.Scan(&client.Id, &client.Name, &client.Phone, &client.Address)
+		var client model.ClientResult
+		err = rows.Scan(&client.Id, &client.Name, &client.Phone, &client.Address, &client.Status)
 		if err != nil {
 			panic(err)
 		}

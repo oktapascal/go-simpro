@@ -15,6 +15,14 @@ type (
 		Phone   string
 	}
 
+	ClientResult struct {
+		Id      string
+		Name    string
+		Address string
+		Phone   string
+		Status  string
+	}
+
 	ClientPic struct {
 		Id         int
 		ClientCode string
@@ -61,6 +69,7 @@ type (
 		Name    string `json:"name"`
 		Address string `json:"address"`
 		Phone   string `json:"phone"`
+		Status  string `json:"status"`
 	}
 
 	ClientPicResponse struct {
@@ -86,7 +95,7 @@ type (
 		UpdateClient(ctx context.Context, tx *sql.Tx, data *Client) *Client
 		UpdateClientPic(ctx context.Context, tx *sql.Tx, data *[]ClientPic) *[]ClientPic
 		GetAllClients(ctx context.Context, tx *sql.Tx, params *helper.PaginationParams) *[]Client
-		GetClientsNoPagination(ctx context.Context, tx *sql.Tx) *[]Client
+		GetClientsNoPagination(ctx context.Context, tx *sql.Tx) *[]ClientResult
 		GetClient(ctx context.Context, tx *sql.Tx, id string) (*Client, error)
 		GetClientPic(ctx context.Context, tx *sql.Tx, id string) *[]ClientPic
 		DeleteClientPic(ctx context.Context, tx *sql.Tx, id string, clientId []int)

@@ -100,6 +100,7 @@ func (svc *Service) GetClientsNoPagination(ctx context.Context) []model.ClientRe
 				Name:    value.Name,
 				Address: value.Address,
 				Phone:   value.Phone,
+				Status:  value.Status,
 			}
 
 			result = append(result, client)
