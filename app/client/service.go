@@ -82,6 +82,33 @@ func (svc *Service) GetAllClients(ctx context.Context, params *helper.Pagination
 	return result
 }
 
+func (svc *Service) GetClientsNoPagination(ctx context.Context) []model.ClientResponse {
+	tx, err := svc.db.Begin()
+	if err != nil {
+		panic(err)
+	}
+
+	defer helper.CommitRollback(tx)
+
+	clients := svc.rpo.GetClientsNoPagination(ctx, tx)
+
+	var result []model.ClientResponse
+	if len(*clients) > 0 {
+		for _, value := range *clients {
+			client := model.ClientResponse{
+				Id:      value.Id,
+				Name:    value.Name,
+				Address: value.Address,
+				Phone:   value.Phone,
+			}
+
+			result = append(result, client)
+		}
+	}
+
+	return result
+}
+
 func (svc *Service) GetOneClient(ctx context.Context, id string) model.ClientDetailResponse {
 	tx, err := svc.db.Begin()
 	if err != nil {

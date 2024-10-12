@@ -86,7 +86,6 @@ func (rpo *Repository) CreateClientPic(ctx context.Context, tx *sql.Tx, data *[]
 		args = append(args, row.ClientId, row.Name, row.Phone, row.Email, row.Address)
 	}
 
-	//goland:noinspection SqlNoDataSourceInspection
 	query := fmt.Sprintf("insert into clients_pic (prefix, client_id, name, phone, email, address) values %s", placeholder)
 
 	_, err := tx.ExecContext(ctx, query, args...)
@@ -119,7 +118,6 @@ func (rpo *Repository) GetAllClients(ctx context.Context, tx *sql.Tx, params *he
 
 	// add limit and offset for paginate
 	offset := (params.Page - 1) * params.PageSize
-	//goland:noinspection SqlNoDataSourceInspection
 	query += " limit ? offset ?"
 	args = append(args, params.PageSize, offset)
 
@@ -139,6 +137,35 @@ func (rpo *Repository) GetAllClients(ctx context.Context, tx *sql.Tx, params *he
 	for rows.Next() {
 		var client model.Client
 		err = rows.Scan(&client.Id, &client.Name, &client.Address, &client.Phone)
+		if err != nil {
+			panic(err)
+		}
+
+		clients = append(clients, client)
+	}
+
+	return &clients
+}
+
+func (rpo *Repository) GetClientsNoPagination(ctx context.Context, tx *sql.Tx) *[]model.Client {
+	query := "select id, name, phone, address from clients where deleted_at is null"
+
+	rows, err := tx.QueryContext(ctx, query)
+	if err != nil {
+		panic(err)
+	}
+
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	var clients []model.Client
+	for rows.Next() {
+		var client model.Client
+		err = rows.Scan(&client.Id, &client.Name, &client.Phone, &client.Address)
 		if err != nil {
 			panic(err)
 		}
@@ -272,7 +299,6 @@ func (rpo *Repository) DeleteClientPic(ctx context.Context, tx *sql.Tx, id strin
 		placeholders[i] = "?"
 	}
 
-	//goland:noinspection SqlNoDataSourceInspection
 	query := fmt.Sprintf("update clients_pic set deleted_at = current_timestamp where client_id = ? and id not in (%s)", strings.Join(placeholders, ","))
 
 	args := make([]any, len(clientId)+1)

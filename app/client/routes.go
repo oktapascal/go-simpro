@@ -14,7 +14,8 @@ func (router *Router) InitializeRoute(mux *chi.Mux) {
 	mux.Route("/api/client", func(route chi.Router) {
 		route.Use(middleware.AuthorizationCheckMiddleware)
 		route.Use(middleware.VerifyAccessTokenMiddleware)
-		route.Get("/all", router.hdl.GetAllClients())
+		route.Get("/pagination", router.hdl.GetAllClients())
+		route.Get("/no-pagination", router.hdl.GetClientsNoPagination())
 		route.Get("/{id}", router.hdl.GetOneClient())
 		route.Post("/", router.hdl.SaveClient())
 		route.Put("/{id}", router.hdl.UpdateClient())

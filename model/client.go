@@ -86,6 +86,7 @@ type (
 		UpdateClient(ctx context.Context, tx *sql.Tx, data *Client) *Client
 		UpdateClientPic(ctx context.Context, tx *sql.Tx, data *[]ClientPic) *[]ClientPic
 		GetAllClients(ctx context.Context, tx *sql.Tx, params *helper.PaginationParams) *[]Client
+		GetClientsNoPagination(ctx context.Context, tx *sql.Tx) *[]Client
 		GetClient(ctx context.Context, tx *sql.Tx, id string) (*Client, error)
 		GetClientPic(ctx context.Context, tx *sql.Tx, id string) *[]ClientPic
 		DeleteClientPic(ctx context.Context, tx *sql.Tx, id string, clientId []int)
@@ -96,6 +97,7 @@ type (
 		StoreClient(ctx context.Context, request *SaveClientRequest) ClientResponse
 		UpdateClient(ctx context.Context, request *UpdateClientRequest) ClientResponse
 		GetAllClients(ctx context.Context, params *helper.PaginationParams) []ClientResponse
+		GetClientsNoPagination(ctx context.Context) []ClientResponse
 		GetOneClient(ctx context.Context, id string) ClientDetailResponse
 		DeleteClient(ctx context.Context, id string)
 	}
@@ -104,6 +106,7 @@ type (
 		SaveClient() http.HandlerFunc
 		UpdateClient() http.HandlerFunc
 		GetAllClients() http.HandlerFunc
+		GetClientsNoPagination() http.HandlerFunc
 		GetOneClient() http.HandlerFunc
 		DeleteClient() http.HandlerFunc
 	}

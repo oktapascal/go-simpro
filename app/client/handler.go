@@ -101,6 +101,28 @@ func (hdl *Handler) GetAllClients() http.HandlerFunc {
 	}
 }
 
+func (hdl *Handler) GetClientsNoPagination() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		ctx := request.Context()
+		result := hdl.svc.GetClientsNoPagination(ctx)
+
+		svcResponse := web.DefaultResponse{
+			Code:   http.StatusOK,
+			Status: http.StatusText(http.StatusOK),
+			Data:   result,
+		}
+
+		writer.Header().Set("Content-Type", "application/json")
+
+		encoder := json.NewEncoder(writer)
+
+		err := encoder.Encode(svcResponse)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
 func (hdl *Handler) GetOneClient() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		id := chi.URLParam(request, "id")
