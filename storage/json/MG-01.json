@@ -37,6 +37,12 @@
         "name": "Client",
         "path_url": "/recycle/client",
         "children": []
+      },
+      {
+        "id": "M3B",
+        "name": "PIC",
+        "path_url": "/recycle/pic",
+        "children": []
       }
     ]
   },
@@ -49,13 +55,19 @@
       {
         "id": "M4A",
         "name": "Users",
-        "path_url": "/settings/users",
+        "path_url": "/settings/user",
         "children": []
       },
       {
         "id": "M4B",
+        "name": "Group Menu",
+        "path_url": "/settings/group-menu",
+        "children": []
+      },
+      {
+        "id": "M4C",
         "name": "Menu",
-        "path_url": "/settings/menus",
+        "path_url": "/settings/menu",
         "children": []
       }
     ]
