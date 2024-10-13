@@ -35,7 +35,7 @@
       {
         "id": "M3A",
         "name": "Client",
-        "path_url": "/recycle/client",
+        "path_url": "/recycle/clients",
         "children": []
       },
       {
