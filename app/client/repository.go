@@ -14,7 +14,6 @@ import (
 type Repository struct{}
 
 func (rpo *Repository) GenerateClientKode(ctx context.Context, tx *sql.Tx) *string {
-	//goland:noinspection SqlNoDataSourceInspection
 	query := "select id from clients order by created_at desc limit 1"
 
 	rows, err := tx.QueryContext(ctx, query)
@@ -60,7 +59,6 @@ func (rpo *Repository) GenerateClientKode(ctx context.Context, tx *sql.Tx) *stri
 }
 
 func (rpo *Repository) CreateClient(ctx context.Context, tx *sql.Tx, data *model.Client) *model.Client {
-	//goland:noinspection SqlNoDataSourceInspection
 	query := "insert into clients (id, name, address, phone) values (?, ?, ?, ?)"
 
 	_, err := tx.ExecContext(ctx, query, data.Id, data.Name, data.Address, data.Phone)
@@ -185,7 +183,6 @@ func (rpo *Repository) GetClientsNoPagination(ctx context.Context, tx *sql.Tx) *
 }
 
 func (rpo *Repository) GetClient(ctx context.Context, tx *sql.Tx, id string) (*model.Client, error) {
-	//goland:noinspection SqlNoDataSourceInspection
 	query := "select id, name, phone, address from clients where id = ?"
 
 	rows, err := tx.QueryContext(ctx, query, id)
@@ -244,7 +241,6 @@ func (rpo *Repository) GetClientPic(ctx context.Context, tx *sql.Tx, id string) 
 }
 
 func (rpo *Repository) UpdateClient(ctx context.Context, tx *sql.Tx, data *model.Client) *model.Client {
-	//goland:noinspection SqlNoDataSourceInspection
 	query := "update clients set name = ?, address = ?, phone = ? where id = ?"
 
 	_, err := tx.ExecContext(ctx, query, data.Name, data.Address, data.Phone, data.Id)
@@ -322,7 +318,6 @@ func (rpo *Repository) DeleteClientPic(ctx context.Context, tx *sql.Tx, id strin
 }
 
 func (rpo *Repository) DeleteClient(ctx context.Context, tx *sql.Tx, id string) {
-	//goland:noinspection SqlNoDataSourceInspection
 	query := "update clients set deleted_at = current_timestamp where id = ?"
 
 	_, err := tx.ExecContext(ctx, query, id)
@@ -330,7 +325,6 @@ func (rpo *Repository) DeleteClient(ctx context.Context, tx *sql.Tx, id string) 
 		panic(err)
 	}
 
-	//goland:noinspection SqlNoDataSourceInspection
 	query = "update clients_pic set deleted_at = current_timestamp where client_id = ? and deleted_at is null"
 	_, err = tx.ExecContext(ctx, query, id)
 	if err != nil {
