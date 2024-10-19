@@ -11,14 +11,14 @@ type Router struct {
 }
 
 func (router *Router) InitializeRoute(mux *chi.Mux) {
-	mux.Route("/api/client", func(route chi.Router) {
+	mux.Route("/api", func(route chi.Router) {
 		route.Use(middleware.AuthorizationCheckMiddleware)
 		route.Use(middleware.VerifyAccessTokenMiddleware)
-		route.Get("/pagination", router.hdl.GetAllClients())
-		route.Get("/no-pagination", router.hdl.GetClientsNoPagination())
-		route.Get("/{id}", router.hdl.GetOneClient())
-		route.Post("/", router.hdl.SaveClient())
-		route.Put("/{id}", router.hdl.UpdateClient())
-		route.Delete("/{id}", router.hdl.DeleteClient())
+		route.Get("/clients/pagination", router.hdl.GetAllClients())
+		route.Get("/clients/no-pagination", router.hdl.GetClientsNoPagination())
+		route.Get("/client/{id}", router.hdl.GetOneClient())
+		route.Post("/client", router.hdl.SaveClient())
+		route.Put("/client/{id}", router.hdl.UpdateClient())
+		route.Delete("/client/{id}", router.hdl.DeleteClient())
 	})
 }
