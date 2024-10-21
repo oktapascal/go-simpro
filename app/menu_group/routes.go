@@ -10,14 +10,14 @@ type Router struct {
 	hdl model.MenuGroupHandler
 }
 
-func (router *Router) InitializeRoute(mux *chi.Mux) {
-	mux.Route("/api/menu-group", func(route chi.Router) {
-		route.Use(middleware.AuthorizationCheckMiddleware)
-		route.Use(middleware.VerifyAccessTokenMiddleware)
-		route.Get("/all", router.hdl.GetAllMenuGroups())
-		route.Get("/{id}", router.hdl.GetOneMenuGroup())
-		route.Post("/", router.hdl.SaveMenuGroup())
-		route.Put("/{id}", router.hdl.UpdateMenuGroup())
-		route.Delete("/{id}", router.hdl.DeleteMenuGroup())
+func (router *Router) InitializeRoute(route chi.Router) {
+	route.Group(func(subroute chi.Router) {
+		subroute.Use(middleware.AuthorizationCheckMiddleware)
+		subroute.Use(middleware.VerifyAccessTokenMiddleware)
+		subroute.Get("/menu-groups", router.hdl.GetAllMenuGroups())
+		subroute.Get("/menu-group/{id}", router.hdl.GetOneMenuGroup())
+		subroute.Post("/menu-group", router.hdl.SaveMenuGroup())
+		subroute.Put("/menu-group/{id}", router.hdl.UpdateMenuGroup())
+		subroute.Delete("/menu-group/{id}", router.hdl.DeleteMenuGroup())
 	})
 }

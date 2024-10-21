@@ -10,14 +10,14 @@ type Router struct {
 	hdl model.ProjectManagerHandler
 }
 
-func (router *Router) InitializeRoute(mux *chi.Mux) {
-	mux.Route("/api/project-manager", func(route chi.Router) {
-		route.Use(middleware.AuthorizationCheckMiddleware)
-		route.Use(middleware.VerifyAccessTokenMiddleware)
-		route.Get("/no-pagination", router.hdl.GetProjectManagersNoPagination())
-		route.Get("/{id}", router.hdl.GetOneProjectManager())
-		route.Post("/", router.hdl.SaveProjectManager())
-		route.Put("/{id}", router.hdl.UpdateProjectManager())
-		route.Delete("/{id}", router.hdl.DeleteProjectManager())
+func (router *Router) InitializeRoute(route chi.Router) {
+	route.Group(func(subroute chi.Router) {
+		subroute.Use(middleware.AuthorizationCheckMiddleware)
+		subroute.Use(middleware.VerifyAccessTokenMiddleware)
+		subroute.Get("/project-managers/no-pagination", router.hdl.GetProjectManagersNoPagination())
+		subroute.Get("/project-manager/{id}", router.hdl.GetOneProjectManager())
+		subroute.Post("/project-manager", router.hdl.SaveProjectManager())
+		subroute.Put("/project-manager/{id}", router.hdl.UpdateProjectManager())
+		subroute.Delete("/project-manager/{id}", router.hdl.DeleteProjectManager())
 	})
 }

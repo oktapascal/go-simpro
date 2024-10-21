@@ -10,18 +10,20 @@ type Router struct {
 	hdl model.LoginSessionHandler
 }
 
-func (router *Router) InitializeRoute(mux *chi.Mux) {
-	mux.Route("/api/auth", func(route chi.Router) {
-		route.Post("/login", router.hdl.Login())
-		route.Group(func(route chi.Router) {
-			route.Use(middleware.AuthorizationCheckMiddleware)
-			route.Use(middleware.VerifyRefreshTokenMiddleware)
-			route.Get("/access-token", router.hdl.GetAccessToken())
+func (router *Router) InitializeRoute(route chi.Router) {
+	route.Route("/auth", func(routes chi.Router) {
+		routes.Post("/login", router.hdl.Login())
+
+		routes.Group(func(subroute chi.Router) {
+			subroute.Use(middleware.AuthorizationCheckMiddleware)
+			subroute.Use(middleware.VerifyRefreshTokenMiddleware)
+			subroute.Get("/access-token", router.hdl.GetAccessToken())
 		})
-		route.Group(func(route chi.Router) {
-			route.Use(middleware.AuthorizationCheckMiddleware)
-			route.Use(middleware.VerifyAccessTokenMiddleware)
-			route.Post("/logout", router.hdl.Logout())
+
+		routes.Group(func(subroute chi.Router) {
+			subroute.Use(middleware.AuthorizationCheckMiddleware)
+			subroute.Use(middleware.VerifyAccessTokenMiddleware)
+			subroute.Post("/logout", router.hdl.Logout())
 		})
 	})
 }

@@ -10,10 +10,10 @@ type Router struct {
 	hdl model.MenuHandler
 }
 
-func (router *Router) InitializeRoute(mux *chi.Mux) {
-	mux.Route("/api/menu", func(route chi.Router) {
-		route.Use(middleware.AuthorizationCheckMiddleware)
-		route.Use(middleware.VerifyAccessTokenMiddleware)
-		route.Get("/all", router.hdl.GetMenu())
+func (router *Router) InitializeRoute(route chi.Router) {
+	route.Group(func(subroute chi.Router) {
+		subroute.Use(middleware.AuthorizationCheckMiddleware)
+		subroute.Use(middleware.VerifyAccessTokenMiddleware)
+		subroute.Get("/menus", router.hdl.GetMenu())
 	})
 }

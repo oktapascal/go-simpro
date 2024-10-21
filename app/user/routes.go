@@ -10,17 +10,17 @@ type Router struct {
 	hdl model.UserHandler
 }
 
-func (router *Router) InitializeRoute(mux *chi.Mux) {
-	mux.Route("/api/user", func(route chi.Router) {
-		route.Get("/{username}/profile-photo", router.hdl.GetPhotoProfile())
+func (router *Router) InitializeRoute(route chi.Router) {
+	route.Route("/user", func(subroute chi.Router) {
+		subroute.Get("/{username}/profile-photo", router.hdl.GetPhotoProfile())
 
-		route.Group(func(route chi.Router) {
-			route.Use(middleware.AuthorizationCheckMiddleware)
-			route.Use(middleware.VerifyAccessTokenMiddleware)
-			route.Get("/with-token", router.hdl.GetUserByToken())
-			route.Post("/", router.hdl.SaveUser())
-			route.Put("/", router.hdl.EditUser())
-			route.Post("/upload-photo", router.hdl.UploadPhotoProfile())
+		subroute.Group(func(subnestroute chi.Router) {
+			subnestroute.Use(middleware.AuthorizationCheckMiddleware)
+			subnestroute.Use(middleware.VerifyAccessTokenMiddleware)
+			subnestroute.Get("/with-token", router.hdl.GetUserByToken())
+			subnestroute.Post("/", router.hdl.SaveUser())
+			subnestroute.Put("/", router.hdl.EditUser())
+			subnestroute.Post("/upload-photo", router.hdl.UploadPhotoProfile())
 		})
 	})
 }

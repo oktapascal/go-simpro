@@ -10,15 +10,15 @@ type Router struct {
 	hdl model.ClientHandler
 }
 
-func (router *Router) InitializeRoute(mux *chi.Mux) {
-	mux.Route("/api", func(route chi.Router) {
-		route.Use(middleware.AuthorizationCheckMiddleware)
-		route.Use(middleware.VerifyAccessTokenMiddleware)
-		route.Get("/clients/pagination", router.hdl.GetAllClients())
-		route.Get("/clients/no-pagination", router.hdl.GetClientsNoPagination())
-		route.Get("/client/{id}", router.hdl.GetOneClient())
-		route.Post("/client", router.hdl.SaveClient())
-		route.Put("/client/{id}", router.hdl.UpdateClient())
-		route.Delete("/client/{id}", router.hdl.DeleteClient())
+func (router *Router) InitializeRoute(route chi.Router) {
+	route.Group(func(subroute chi.Router) {
+		subroute.Use(middleware.VerifyAccessTokenMiddleware)
+		subroute.Use(middleware.AuthorizationCheckMiddleware)
+		subroute.Get("/clients/pagination", router.hdl.GetAllClients())
+		subroute.Get("/clients/no-pagination", router.hdl.GetClientsNoPagination())
+		subroute.Get("/client/{id}", router.hdl.GetOneClient())
+		subroute.Post("/client", router.hdl.SaveClient())
+		subroute.Put("/client/{id}", router.hdl.UpdateClient())
+		subroute.Delete("/client/{id}", router.hdl.DeleteClient())
 	})
 }

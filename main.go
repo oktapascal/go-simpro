@@ -52,12 +52,16 @@ func main() {
 	router.NotFound(welcomeHandler.NotFoundApi())
 	router.MethodNotAllowed(welcomeHandler.MethodNotAllowedApi())
 
-	login.Wire(validate, db).InitializeRoute(router)
-	user.Wire(validate, db).InitializeRoute(router)
-	client.Wire(validate, db).InitializeRoute(router)
-	menu.Wire(validate).InitializeRoute(router)
-	menu_group.Wire(validate, db).InitializeRoute(router)
-	project_manager.Wire(validate, db).InitializeRoute(router)
+	router.Group(func(routes chi.Router) {
+		routes.Route("/api", func(route chi.Router) {
+			menu_group.Wire(validate, db).InitializeRoute(route)
+			client.Wire(validate, db).InitializeRoute(route)
+			login.Wire(validate, db).InitializeRoute(route)
+			user.Wire(validate, db).InitializeRoute(route)
+			menu.Wire(validate).InitializeRoute(route)
+			project_manager.Wire(validate, db).InitializeRoute(route)
+		})
+	})
 
 	log.Info(fmt.Sprintf("%s Application Started on http://localhost:%s", viper.GetString("APP_NAME"), viper.GetString("APP_PORT")))
 	err = http.ListenAndServe(":"+viper.GetString("APP_PORT"), router)
