@@ -12,9 +12,16 @@ type (
 		Name string
 	}
 
+	MenuGroupResult struct {
+		Id     string
+		Name   string
+		Status string
+	}
+
 	MenuGroupResponse struct {
-		Id   string `json:"id"`
-		Name string `json:"name"`
+		Id     string `json:"id"`
+		Name   string `json:"name"`
+		Status string `json:"status"`
 	}
 
 	MenuGroupRequest struct {
@@ -27,7 +34,7 @@ type (
 		CreateMenuGroup(ctx context.Context, tx *sql.Tx, data *MenuGroup) *MenuGroup
 		UpdateMenuGroup(ctx context.Context, tx *sql.Tx, data *MenuGroup) *MenuGroup
 		GetMenuGroup(ctx context.Context, tx *sql.Tx, id string) (*MenuGroup, error)
-		GetAllMenuGroups(ctx context.Context, tx *sql.Tx) *[]MenuGroup
+		GetAllMenuGroups(ctx context.Context, tx *sql.Tx) *[]MenuGroupResult
 		DeleteMenuGroup(ctx context.Context, tx *sql.Tx, id string)
 	}
 

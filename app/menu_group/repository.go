@@ -105,8 +105,15 @@ func (rpo *Repository) GetMenuGroup(ctx context.Context, tx *sql.Tx, id string) 
 	}
 }
 
-func (rpo *Repository) GetAllMenuGroups(ctx context.Context, tx *sql.Tx) *[]model.MenuGroup {
-	query := "select id, name from menu_groups where deleted_at is null"
+func (rpo *Repository) GetAllMenuGroups(ctx context.Context, tx *sql.Tx) *[]model.MenuGroupResult {
+	query := `select id, name,
+    case
+		when timestampdiff(minute, created_at, now()) <= 10 then 'CREATED'
+		when timestampdiff(minute, updated_at, now()) <= 10 then 'UPDATED'
+		else 'NONE' 
+	end as status
+	from menu_groups 
+	where deleted_at is null`
 
 	rows, err := tx.QueryContext(ctx, query)
 	if err != nil {
@@ -120,10 +127,10 @@ func (rpo *Repository) GetAllMenuGroups(ctx context.Context, tx *sql.Tx) *[]mode
 		}
 	}()
 
-	var menuGroups []model.MenuGroup
+	var menuGroups []model.MenuGroupResult
 	for rows.Next() {
-		var menuGroup model.MenuGroup
-		err = rows.Scan(&menuGroup.Id, &menuGroup.Name)
+		var menuGroup model.MenuGroupResult
+		err = rows.Scan(&menuGroup.Id, &menuGroup.Name, &menuGroup.Status)
 		if err != nil {
 			panic(err)
 		}

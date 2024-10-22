@@ -72,8 +72,9 @@ func (svc *Service) GetAllMenuGroups(ctx context.Context) []model.MenuGroupRespo
 	if len(*menuGroups) > 0 {
 		for _, value := range *menuGroups {
 			menuGroup := model.MenuGroupResponse{
-				Id:   value.Id,
-				Name: value.Name,
+				Id:     value.Id,
+				Name:   value.Name,
+				Status: value.Status,
 			}
 
 			result = append(result, menuGroup)
