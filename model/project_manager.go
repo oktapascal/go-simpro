@@ -17,6 +17,8 @@ type (
 	ProjectManagerResult struct {
 		Id     string
 		Name   string
+		Email  string
+		Phone  string
 		Status string
 	}
 

@@ -80,7 +80,7 @@ func (rpo *Repository) UpdateProjectManager(ctx context.Context, tx *sql.Tx, dat
 }
 
 func (rpo *Repository) GetProjectManagersNoPagination(ctx context.Context, tx *sql.Tx) *[]model.ProjectManagerResult {
-	query := `select id, name, 
+	query := `select id, name, email, phone,
     case
 		when timestampdiff(minute, created_at, now()) <= 10 then 'CREATED'
 		when timestampdiff(minute, updated_at, now()) <= 10 then 'UPDATED'
@@ -105,7 +105,7 @@ func (rpo *Repository) GetProjectManagersNoPagination(ctx context.Context, tx *s
 	var projectManagers []model.ProjectManagerResult
 	for rows.Next() {
 		var projectManager model.ProjectManagerResult
-		err = rows.Scan(&projectManager.Id, &projectManager.Name, &projectManager.Status)
+		err = rows.Scan(&projectManager.Id, &projectManager.Name, &projectManager.Email, &projectManager.Phone, &projectManager.Status)
 		if err != nil {
 			panic(err)
 		}

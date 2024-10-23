@@ -76,6 +76,8 @@ func (svc *Service) GetProjectManagersNoPagination(ctx context.Context) []model.
 			projectManager := model.ProjectManagerResponse{
 				Id:     value.Id,
 				Name:   value.Name,
+				Email:  value.Email,
+				Phone:  value.Phone,
 				Status: value.Status,
 			}
 
