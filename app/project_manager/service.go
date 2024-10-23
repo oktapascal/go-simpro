@@ -26,6 +26,8 @@ func (svc *Service) StoreProjectManager(ctx context.Context, request *model.Save
 	projectManager := new(model.ProjectManager)
 	projectManager.Id = *id
 	projectManager.Name = request.Name
+	projectManager.Email = request.Email
+	projectManager.Phone = request.Phone
 
 	projectManager = svc.rpo.CreateProjectManager(ctx, tx, projectManager)
 
@@ -49,6 +51,8 @@ func (svc *Service) UpdateProjectManager(ctx context.Context, request *model.Upd
 	}
 
 	projectManager.Name = request.Name
+	projectManager.Email = request.Email
+	projectManager.Phone = request.Phone
 
 	return model.ProjectManagerResponse{
 		Id:   projectManager.Id,

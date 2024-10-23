@@ -58,9 +58,9 @@ func (rpo *Repository) GenerateProjectManagerKode(ctx context.Context, tx *sql.T
 }
 
 func (rpo *Repository) CreateProjectManager(ctx context.Context, tx *sql.Tx, data *model.ProjectManager) *model.ProjectManager {
-	query := "insert into project_managers (id, name) values (?, ?)"
+	query := "insert into project_managers (id, name, email, phone) values (?, ?, ?, ?)"
 
-	_, err := tx.ExecContext(ctx, query, data.Id, data.Name)
+	_, err := tx.ExecContext(ctx, query, data.Id, data.Name, data.Email, data.Phone)
 	if err != nil {
 		panic(err)
 	}
@@ -69,9 +69,9 @@ func (rpo *Repository) CreateProjectManager(ctx context.Context, tx *sql.Tx, dat
 }
 
 func (rpo *Repository) UpdateProjectManager(ctx context.Context, tx *sql.Tx, data *model.ProjectManager) *model.ProjectManager {
-	query := "update project_managers set name = ? where id = ?"
+	query := "update project_managers set name = ?, email = ?, phone = ? where id = ?"
 
-	_, err := tx.ExecContext(ctx, query, data.Name, data.Id)
+	_, err := tx.ExecContext(ctx, query, data.Name, data.Email, data.Phone, data.Id)
 	if err != nil {
 		panic(err)
 	}
@@ -117,7 +117,7 @@ func (rpo *Repository) GetProjectManagersNoPagination(ctx context.Context, tx *s
 }
 
 func (rpo *Repository) GetProjectManager(ctx context.Context, tx *sql.Tx, id string) (*model.ProjectManager, error) {
-	query := "select id, name from project_managers where id = ?"
+	query := "select id, name, email, phone from project_managers where id = ?"
 
 	rows, err := tx.QueryContext(ctx, query, id)
 	if err != nil {
@@ -133,7 +133,7 @@ func (rpo *Repository) GetProjectManager(ctx context.Context, tx *sql.Tx, id str
 
 	projectManager := new(model.ProjectManager)
 	if rows.Next() {
-		err = rows.Scan(&projectManager.Id, &projectManager.Name)
+		err = rows.Scan(&projectManager.Id, &projectManager.Name, &projectManager.Email, &projectManager.Phone)
 		if err != nil {
 			panic(err)
 		}
