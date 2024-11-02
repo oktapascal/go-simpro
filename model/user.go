@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"database/sql"
+	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 )
 
@@ -51,6 +52,7 @@ type (
 		GetUserByUsername(ctx context.Context, tx *sql.Tx, username string) (*User, error)
 		GetUserByID(ctx context.Context, tx *sql.Tx, id string) (*User, error)
 		SaveUser(ctx context.Context, tx *sql.Tx, data *User)
+		UpdateProfilePhotoUser(ctx context.Context, tx *sql.Tx, data *User)
 	}
 
 	UserService interface {
@@ -58,9 +60,11 @@ type (
 		GetUserByUsername(ctx context.Context, username string) UserResponse
 		GetUserByID(ctx context.Context, id string) UserResponse
 		SaveUser(ctx context.Context, request *SaveRequestUser) UserResponse
+		UpdateProfilePhotoUser(ctx context.Context, fileName string, claims jwt.MapClaims) UserResponse
 	}
 
 	UserHandler interface {
 		SaveUser() http.HandlerFunc
+		UpdateProfilePhotoUser() http.HandlerFunc
 	}
 )

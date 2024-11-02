@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/oktapascal/go-simpro/exception"
 	"github.com/oktapascal/go-simpro/helper"
 	"github.com/oktapascal/go-simpro/model"
@@ -147,6 +148,42 @@ func (svc *Service) SaveUser(ctx context.Context, request *model.SaveRequestUser
 		IDRole:       user.IDRole,
 		IDMenuGroup:  user.IDMenuGroup,
 		StatusActive: true,
+		Avatar:       user.Avatar,
+	}
+}
+
+func (svc *Service) UpdateProfilePhotoUser(ctx context.Context, fileName string, claims jwt.MapClaims) model.UserResponse {
+	tx, err := svc.db.Begin()
+	if err != nil {
+		panic(err)
+	}
+
+	defer helper.CommitRollback(tx)
+
+	userID, ok := claims["id"].(string)
+	if !ok {
+		panic("Something wrong when extracting username from jwt token")
+	}
+
+	user, err := svc.rpo.GetUserByID(ctx, tx, userID)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
+
+	user.Avatar = fileName
+
+	svc.rpo.UpdateProfilePhotoUser(ctx, tx, user)
+
+	return model.UserResponse{
+		ID:           user.ID,
+		Username:     user.Username,
+		Password:     "",
+		Email:        user.Email,
+		Name:         user.Name,
+		Phone:        user.Phone,
+		IDRole:       user.IDRole,
+		IDMenuGroup:  user.IDMenuGroup,
+		StatusActive: user.StatusActive,
 		Avatar:       user.Avatar,
 	}
 }
