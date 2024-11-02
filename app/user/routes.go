@@ -18,6 +18,7 @@ func (router *Router) InitializeRoutes(route chi.Router) {
 			children.Use(middleware.AuthorizationCheckMiddleware)
 			children.Use(middleware.VerifyAccessTokenMiddleware)
 			children.Post("/upload-photo", router.hdl.UpdateProfilePhotoUser())
+			children.Put("/", router.hdl.UpdateUser())
 		})
 	})
 }

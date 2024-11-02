@@ -128,3 +128,39 @@ func (hdl *Handler) UpdateProfilePhotoUser() http.HandlerFunc {
 		}
 	}
 }
+
+func (hdl *Handler) UpdateUser() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		userInfo := request.Context().Value("claims").(jwt.MapClaims)
+
+		req := new(model.UpdateRequestUser)
+
+		err := helper.DecodeRequest(request, req)
+		if err != nil {
+			panic(err)
+		}
+
+		err = hdl.validate.Struct(req)
+		if err != nil {
+			panic(err)
+		}
+
+		ctx := request.Context()
+		result := hdl.svc.UpdateUser(ctx, req, userInfo)
+
+		svcResponse := web.DefaultResponse{
+			Code:   http.StatusOK,
+			Status: http.StatusText(http.StatusOK),
+			Data:   result,
+		}
+
+		writer.Header().Set("Content-Type", "application/json")
+
+		encoder := json.NewEncoder(writer)
+
+		err = encoder.Encode(svcResponse)
+		if err != nil {
+			panic(err)
+		}
+	}
+}

@@ -47,12 +47,19 @@ type (
 		IDMenuGroup          string `json:"id_menu_group"`
 	}
 
+	UpdateRequestUser struct {
+		Email string `json:"email" validate:"required,email,min=1,max=50"`
+		Name  string `json:"name" validate:"required,min=1,max=50"`
+		Phone string `json:"phone" validate:"required,min=1,max=13"`
+	}
+
 	UserRepository interface {
 		GetUserByEmail(ctx context.Context, tx *sql.Tx, email string) (*User, error)
 		GetUserByUsername(ctx context.Context, tx *sql.Tx, username string) (*User, error)
 		GetUserByID(ctx context.Context, tx *sql.Tx, id string) (*User, error)
 		SaveUser(ctx context.Context, tx *sql.Tx, data *User)
 		UpdateProfilePhotoUser(ctx context.Context, tx *sql.Tx, data *User)
+		UpdateUser(ctx context.Context, tx *sql.Tx, data *User)
 	}
 
 	UserService interface {
@@ -61,10 +68,12 @@ type (
 		GetUserByID(ctx context.Context, id string) UserResponse
 		SaveUser(ctx context.Context, request *SaveRequestUser) UserResponse
 		UpdateProfilePhotoUser(ctx context.Context, fileName string, claims jwt.MapClaims) UserResponse
+		UpdateUser(ctx context.Context, request *UpdateRequestUser, claims jwt.MapClaims) UserResponse
 	}
 
 	UserHandler interface {
 		SaveUser() http.HandlerFunc
 		UpdateProfilePhotoUser() http.HandlerFunc
+		UpdateUser() http.HandlerFunc
 	}
 )
