@@ -6,6 +6,7 @@ import (
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/oktapascal/go-simpro/app/auth"
+	"github.com/oktapascal/go-simpro/app/navigation"
 	"github.com/oktapascal/go-simpro/app/user"
 	"github.com/oktapascal/go-simpro/app/welcome"
 	"github.com/oktapascal/go-simpro/config"
@@ -61,6 +62,7 @@ func main() {
 		routers.Route("/api", func(routes chi.Router) {
 			auth.Wire(validate, db).InitializeRoutes(routes)
 			user.Wire(validate, db).InitializeRoutes(routes)
+			navigation.Wire().InitializeRoutes(routes)
 		})
 	})
 

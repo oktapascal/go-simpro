@@ -1,0 +1,97 @@
+[
+  {
+    "id": "M1",
+    "name": "Home",
+    "icon": "HouseIcon",
+    "path_url": "/",
+    "children": []
+  },
+  {
+    "id": "M2",
+    "name": "Master",
+    "icon": "DatabaseIcon",
+    "path_url": "/master",
+    "children": [
+      {
+        "id": "M2A",
+        "name": "Client",
+        "path_url": "/master/clients",
+        "children": []
+      },
+      {
+        "id": "M2B",
+        "name": "PIC",
+        "path_url": "/master/pic",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "M3",
+    "name": "Transaction",
+    "icon": "SquareChartGrantIcon",
+    "path_url": "/transaction",
+    "children": [
+      {
+        "id": "M3A",
+        "name": "Project",
+        "path_url": "/transaction/project",
+        "children": []
+      },
+      {
+        "id": "M3B",
+        "name": "SPPH",
+        "path_url": "/transaction/spph",
+        "children": []
+      },
+      {
+        "id": "M3C",
+        "name": "SPH",
+        "path_url": "/transaction/sph",
+        "children": []
+      },
+      {
+        "id": "M3D",
+        "name": "Negotiation",
+        "path_url": "/transaction/negotiation",
+        "children": []
+      },
+      {
+        "id": "M3E",
+        "name": "SPK/PKS",
+        "path_url": "/transaction/spk",
+        "children": []
+      },
+      {
+        "id": "M3F",
+        "name": "BAST",
+        "path_url": "/transaction/bast",
+        "children": []
+      },
+      {
+        "id": "M3G",
+        "name": "Trading Invoice",
+        "path_url": "/transaction/trading-invoice",
+        "children": []
+      },
+      {
+        "id": "M3H",
+        "name": "BPO Invoice",
+        "path_url": "/transaction/bpo-invoice",
+        "children": []
+      },
+      {
+        "id": "M3I",
+        "name": "RAP",
+        "path_url": "/transaction/rap",
+        "children": []
+      },
+      {
+        "id": "M3J",
+        "name": "Closing Project",
+        "path_url": "/transaction/close-project",
+        "children": []
+      }
+    ]
+  }
+]
