@@ -19,7 +19,7 @@ func (router *Router) InitializeRoutes(route chi.Router) {
 				subchildren.Use(middleware.VerifyRootUserMiddleware)
 				subchildren.Post("/", router.hdl.SaveUser())
 			})
-
+			children.Get("/with-auth", router.hdl.GetUserByToken())
 			children.Post("/upload-photo", router.hdl.UpdateProfilePhotoUser())
 			children.Put("/", router.hdl.UpdateUser())
 		})

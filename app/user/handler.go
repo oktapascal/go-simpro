@@ -163,4 +163,34 @@ func (hdl *Handler) UpdateUser() http.HandlerFunc {
 			panic(err)
 		}
 	}
+
+}
+
+func (hdl *Handler) GetUserByToken() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		userInfo := request.Context().Value("claims").(jwt.MapClaims)
+
+		userID, ok := userInfo["id"].(string)
+		if !ok {
+			panic("Something wrong when extracting user id from jwt token")
+		}
+
+		ctx := request.Context()
+		result := hdl.svc.GetUserByID(ctx, userID)
+
+		svcResponse := web.DefaultResponse{
+			Code:   http.StatusOK,
+			Status: http.StatusText(http.StatusOK),
+			Data:   result,
+		}
+
+		writer.Header().Set("Content-Type", "application/json")
+
+		encoder := json.NewEncoder(writer)
+
+		err := encoder.Encode(svcResponse)
+		if err != nil {
+			panic(err)
+		}
+	}
 }

@@ -72,6 +72,7 @@ type (
 	}
 
 	UserHandler interface {
+		GetUserByToken() http.HandlerFunc
 		SaveUser() http.HandlerFunc
 		UpdateProfilePhotoUser() http.HandlerFunc
 		UpdateUser() http.HandlerFunc
