@@ -12,11 +12,14 @@ type Router struct {
 
 func (router *Router) InitializeRoutes(route chi.Router) {
 	route.Route("/user", func(subroute chi.Router) {
-		subroute.Post("/", router.hdl.SaveUser())
-
 		subroute.Group(func(children chi.Router) {
 			children.Use(middleware.AuthorizationCheckMiddleware)
 			children.Use(middleware.VerifyAccessTokenMiddleware)
+			children.Group(func(subchildren chi.Router) {
+				subchildren.Use(middleware.VerifyRootUserMiddleware)
+				subchildren.Post("/", router.hdl.SaveUser())
+			})
+
 			children.Post("/upload-photo", router.hdl.UpdateProfilePhotoUser())
 			children.Put("/", router.hdl.UpdateUser())
 		})
