@@ -15,12 +15,12 @@ func (router *Router) InitializeRoutes(route chi.Router) {
 		subroute.Group(func(children chi.Router) {
 			children.Use(middleware.AuthorizationCheckMiddleware)
 			children.Use(middleware.VerifyAccessTokenMiddleware)
-			children.Get("/clients/with-pagination", router.hdl.GetClientsWithPagination())
-			children.Get("/clients", router.hdl.GetClients())
-			children.Get("/client/{id}", router.hdl.GetClient())
-			children.Post("/client", router.hdl.SaveClient())
-			children.Put("/client/{id}", router.hdl.UpdateClient())
-			children.Delete("/client/{id}", router.hdl.DeleteClient())
+			children.Get("//with-pagination", router.hdl.GetClientsWithPagination())
+			children.Get("/", router.hdl.GetClients())
+			children.Get("/{id}", router.hdl.GetClient())
+			children.Post("/", router.hdl.SaveClient())
+			children.Put("/{id}", router.hdl.UpdateClient())
+			children.Delete("/{id}", router.hdl.DeleteClient())
 		})
 	})
 }
