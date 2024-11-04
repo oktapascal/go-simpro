@@ -13,7 +13,7 @@ import (
 type Repository struct{}
 
 func (rpo *Repository) SaveClient(ctx context.Context, tx *sql.Tx, data *model.Client) {
-	query := "insert into users (id,name,address,phone) values (?,?,?,?)"
+	query := "insert into clients (id,name,address,phone) values (?,?,?,?)"
 
 	_, err := tx.ExecContext(ctx, query, data.ID, data.Name, data.Address, data.Phone)
 	if err != nil {
