@@ -45,7 +45,7 @@ func (rpo *Repository) SaveClientPIC(ctx context.Context, tx *sql.Tx, data *[]mo
 }
 
 func (rpo *Repository) UpdateClient(ctx context.Context, tx *sql.Tx, data *model.Client) {
-	query := "update clients set name=?,address=?,phone=? where id=?"
+	query := "update clients set name=?,address=?,phone=?,updated_at=current_timestamp where id=?"
 
 	_, err := tx.ExecContext(ctx, query, data.Name, data.Address, data.Phone, data.ID)
 	if err != nil {
