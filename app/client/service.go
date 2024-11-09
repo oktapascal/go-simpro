@@ -79,9 +79,9 @@ func (svc *Service) UpdateClient(ctx context.Context, request *model.UpdateReque
 
 	defer helper.CommitRollback(tx)
 
-	client, errClient := svc.rpo.GetClient(ctx, tx, request.ID)
-	if errClient != nil {
-		panic(exception.NewNotFoundError(errClient.Error()))
+	client, err := svc.rpo.GetClient(ctx, tx, request.ID)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
 	}
 
 	client.Name = request.Name
@@ -243,9 +243,9 @@ func (svc *Service) DeleteClient(ctx context.Context, id string) {
 
 	defer helper.CommitRollback(tx)
 
-	_, errClient := svc.rpo.GetClient(ctx, tx, id)
-	if errClient != nil {
-		panic(exception.NewNotFoundError(errClient.Error()))
+	_, err = svc.rpo.GetClient(ctx, tx, id)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
 	}
 
 	svc.rpo.DeleteClient(ctx, tx, id)
