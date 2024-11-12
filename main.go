@@ -9,6 +9,7 @@ import (
 	"github.com/oktapascal/go-simpro/app/client"
 	"github.com/oktapascal/go-simpro/app/navigation"
 	"github.com/oktapascal/go-simpro/app/pic"
+	"github.com/oktapascal/go-simpro/app/project"
 	"github.com/oktapascal/go-simpro/app/user"
 	"github.com/oktapascal/go-simpro/app/welcome"
 	"github.com/oktapascal/go-simpro/config"
@@ -67,6 +68,7 @@ func main() {
 			navigation.Wire().InitializeRoutes(routes)
 			client.Wire(validate, db).InitializeRoutes(routes)
 			pic.Wire(validate, db).InitializeRoutes(routes)
+			project.Wire(validate, db).InitializeRoutes(routes)
 		})
 	})
 
