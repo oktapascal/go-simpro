@@ -8,15 +8,16 @@ import (
 
 type (
 	Project struct {
-		ID            string
-		IDClient      string
-		IDClientPIC   int
-		Description   string
-		ProjectType   string
-		ProjectStatus string
-		Status        string
-		Client        Client
-		ClientPIC     ClientPIC
+		ID                string
+		IDClient          string
+		IDClientPIC       int
+		Description       string
+		DescriptionClosed string
+		ProjectType       string
+		ProjectStatus     string
+		Status            string
+		Client            Client
+		ClientPIC         ClientPIC
 	}
 
 	ProjectDoc struct {
@@ -65,6 +66,7 @@ type (
 		UpdateCloseProjectDoc(ctx context.Context, tx *sql.Tx, data *[]ProjectDoc)
 		GetCloseProjects(ctx context.Context, tx *sql.Tx) *[]Project
 		GetCloseProject(ctx context.Context, tx *sql.Tx, id string) (*Project, error)
+		GetCloseProjectDoc(ctx context.Context, tx *sql.Tx, id string) *[]ProjectDoc
 		DeleteCloseProjectDoc(ctx context.Context, tx *sql.Tx, IDProject string, id []int)
 	}
 
