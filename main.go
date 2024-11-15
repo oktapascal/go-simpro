@@ -106,7 +106,7 @@ func main() {
 			}
 
 			unix := time.Now().Unix()
-			fileName := fmt.Sprintf("%s-%d", IDProject, unix)
+			fileName := fmt.Sprintf("%s-%d.%s", IDProject, unix, filepath.Ext(header.Filename))
 			dst, errCreate := os.Create(filepath.Join("storage", "applications", IDProject, fileName))
 			if errCreate != nil {
 				panic(errCreate.Error())
