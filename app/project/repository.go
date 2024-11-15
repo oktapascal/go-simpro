@@ -19,9 +19,9 @@ func (rpo *Repository) SaveProject(ctx context.Context, tx *sql.Tx, data *model.
 }
 
 func (rpo *Repository) UpdateProject(ctx context.Context, tx *sql.Tx, data *model.Project) {
-	query := "update projects set client_id=?,client_pic_id=?,description=?,project_type=? where id=?"
+	query := "update projects set client_id=?,client_pic_id=?,description=?,project_type=?,updated_at=current_timestamp where id=?"
 
-	_, err := tx.ExecContext(ctx, query, data.IDClient, data.IDClientPIC, data.Description, data.ID)
+	_, err := tx.ExecContext(ctx, query, data.IDClient, data.IDClientPIC, data.Description, data.ProjectType, data.ID)
 	if err != nil {
 		panic(err)
 	}
@@ -60,7 +60,7 @@ func (rpo *Repository) GetProjects(ctx context.Context, tx *sql.Tx) *[]model.Pro
 }
 
 func (rpo *Repository) GetProject(ctx context.Context, tx *sql.Tx, id string) (*model.Project, error) {
-	query := `select t1.id,t1.client_id,t1.client_pic_id,t1.description,t1.project_type,t2.name client_name,t3.name client_pic_name
+	query := `select t1.id,t1.client_id,t1.client_pic_id,t1.description,t1.project_type,t1.project_status,t2.name client_name,t3.name client_pic_name
 	from projects t1
 	inner join clients t2 on t1.client_id=t2.id
 	inner join clients_pic t3 on t1.client_pic_id=t3.id
@@ -76,7 +76,7 @@ func (rpo *Repository) GetProject(ctx context.Context, tx *sql.Tx, id string) (*
 	project := new(model.Project)
 	if rows.Next() {
 		err = rows.Scan(&project.ID, &project.IDClient, &project.IDClientPIC, &project.Description, &project.ProjectType,
-			&project.Client.Name, &project.ClientPIC.Name)
+			&project.ProjectStatus, &project.Client.Name, &project.ClientPIC.Name)
 		if err != nil {
 			panic(err)
 		}

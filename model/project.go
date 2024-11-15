@@ -32,20 +32,18 @@ type (
 	}
 
 	SaveRequestProject struct {
-		IDClient    string       `json:"id_client" validate:"required,min=1,max=14"`
-		IDClientPIC int          `json:"id_client_pic" validate:"required"`
-		Description string       `json:"description" validate:"required,min=1,max=250"`
-		ProjectType string       `json:"project_type" validate:"required,min=1,max=20"`
-		ProjectDocs []ProjectDoc `json:"project_doc" validate:"required,minprojectdoc,dive"`
+		IDClient    string `json:"id_client" validate:"required,min=1,max=14"`
+		IDClientPIC int    `json:"id_client_pic" validate:"required"`
+		Description string `json:"description" validate:"required,min=1,max=250"`
+		ProjectType string `json:"project_type" validate:"required,min=1,max=20"`
 	}
 
 	UpdateRequestProject struct {
-		ID          string       `json:"id" validate:"required"`
-		IDClient    string       `json:"id_client" validate:"required,min=1,max=14"`
-		IDClientPIC int          `json:"id_client_pic" validate:"required"`
-		Description string       `json:"description" validate:"required,min=1,max=250"`
-		ProjectType string       `json:"project_type" validate:"required,min=1,max=20"`
-		ProjectDocs []ProjectDoc `json:"project_doc" validate:"required,minprojectdoc,dive"`
+		ID          string `json:"id" validate:"required"`
+		IDClient    string `json:"id_client" validate:"required,min=1,max=14"`
+		IDClientPIC int    `json:"id_client_pic" validate:"required"`
+		Description string `json:"description" validate:"required,min=1,max=250"`
+		ProjectType string `json:"project_type" validate:"required,min=1,max=20"`
 	}
 
 	ProjectResponse struct {

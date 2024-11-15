@@ -75,7 +75,7 @@ func (svc *Service) UpdateProject(ctx context.Context, request *model.UpdateRequ
 	project.IDClient = request.IDClient
 	project.IDClientPIC = request.IDClientPIC
 
-	svc.rpo.SaveProject(ctx, tx, project)
+	svc.rpo.UpdateProject(ctx, tx, project)
 
 	return model.ProjectResponse{
 		ID:            project.ID,
