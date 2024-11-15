@@ -82,7 +82,7 @@ func main() {
 				panic(exception.NewUploadFileError("file exceeds 10mb"))
 			}
 
-			file, header, errFile := request.FormFile("photo")
+			file, header, errFile := request.FormFile("file_dok")
 			if errFile != nil {
 				panic(exception.NewUploadFileError("failed to retrieve file"))
 			}
