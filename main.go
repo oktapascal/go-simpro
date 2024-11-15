@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
@@ -13,10 +14,15 @@ import (
 	"github.com/oktapascal/go-simpro/app/user"
 	"github.com/oktapascal/go-simpro/app/welcome"
 	"github.com/oktapascal/go-simpro/config"
+	"github.com/oktapascal/go-simpro/exception"
 	"github.com/oktapascal/go-simpro/middleware"
+	"github.com/oktapascal/go-simpro/web"
 	"github.com/spf13/viper"
+	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -60,6 +66,75 @@ func main() {
 	router.Get("/", welcomeHandler.Welcome())
 	router.NotFound(welcomeHandler.NotFoundApi())
 	router.MethodNotAllowed(welcomeHandler.MethodNotAllowedApi())
+	router.Group(func(routers chi.Router) {
+		routers.Use(middleware.AuthorizationCheckMiddleware)
+		routers.Use(middleware.VerifyAccessTokenMiddleware)
+
+		router.Post("/api/upload-file/{id_project}", func(writer http.ResponseWriter, request *http.Request) {
+			IDProject := chi.URLParam(request, "id_project")
+
+			const MaxSize = 10 * 1024 * 1024
+
+			request.Body = http.MaxBytesReader(writer, request.Body, MaxSize)
+
+			err := request.ParseMultipartForm(MaxSize)
+			if err != nil {
+				panic(exception.NewUploadFileError("file exceeds 10mb"))
+			}
+
+			file, header, errFile := request.FormFile("photo")
+			if errFile != nil {
+				panic(exception.NewUploadFileError("failed to retrieve file"))
+			}
+
+			defer file.Close()
+
+			fileExt := strings.ToLower(filepath.Ext(header.Filename))
+
+			if !(fileExt == ".png" || fileExt == ".jpg" || fileExt == ".jpeg" || fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".pdf" || fileExt == ".docx") {
+				panic(exception.NewUploadFileError("file format does not support image/document format"))
+			}
+
+			_, err = os.Stat("storage/applications/" + IDProject)
+			if err != nil {
+				if os.IsNotExist(err) {
+					errMkdir := os.Mkdir("storage/applications/"+IDProject, os.ModePerm)
+					if errMkdir != nil {
+						log.Fatal(errMkdir)
+					}
+				}
+			}
+
+			unix := time.Now().Unix()
+			fileName := fmt.Sprintf("%s-%d", IDProject, unix)
+			dst, errCreate := os.Create(filepath.Join("storage", "applications", IDProject, fileName))
+			if errCreate != nil {
+				panic(errCreate.Error())
+			}
+
+			defer dst.Close()
+
+			_, errCopy := io.Copy(dst, file)
+			if errCopy != nil {
+				panic(errCopy.Error())
+			}
+
+			svcResponse := web.DefaultResponse{
+				Code:   http.StatusOK,
+				Status: http.StatusText(http.StatusOK),
+				Data:   fileName,
+			}
+
+			writer.Header().Set("Content-Type", "application/json")
+
+			encoder := json.NewEncoder(writer)
+
+			err = encoder.Encode(svcResponse)
+			if err != nil {
+				panic(err)
+			}
+		})
+	})
 
 	router.Group(func(routers chi.Router) {
 		routers.Route("/api", func(routes chi.Router) {
