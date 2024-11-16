@@ -136,6 +136,35 @@ func main() {
 				panic(err)
 			}
 		})
+
+		router.Get("/api/download-file/{id_project}/{file_name}", func(writer http.ResponseWriter, request *http.Request) {
+			IDProject := chi.URLParam(request, "id_project")
+			fileName := chi.URLParam(request, "file_name")
+
+			filePath := filepath.Join("storage", "applications", IDProject, fileName)
+
+			_, err := os.Stat(filePath)
+			if err != nil {
+				panic(exception.NewNotFoundError("file not found"))
+			}
+
+			file, err := os.Open(filePath)
+			if err != nil {
+				panic(err)
+			}
+
+			if file != nil {
+				defer file.Close()
+			}
+
+			contentDisposition := fmt.Sprintf("attachment; filename=%s", fileName)
+			writer.Header().Set("Content-Disposition", contentDisposition)
+
+			_, err = io.Copy(writer, file)
+			if err != nil {
+				panic(err)
+			}
+		})
 	})
 
 	router.Group(func(routers chi.Router) {
