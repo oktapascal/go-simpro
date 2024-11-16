@@ -194,3 +194,29 @@ func (hdl *Handler) GetUserByToken() http.HandlerFunc {
 		}
 	}
 }
+
+func (hdl *Handler) GetUserPhotoProfile() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		userInfo := request.Context().Value("claims").(jwt.MapClaims)
+
+		userID, ok := userInfo["id"].(string)
+		if !ok {
+			panic("Something wrong when extracting user id from jwt token")
+		}
+
+		ctx := request.Context()
+		user := hdl.svc.GetUserByID(ctx, userID)
+
+		filePath := filepath.Join("storage", "applications", user.ID, user.Avatar)
+
+		_, err := os.Stat(filePath)
+		if err != nil {
+			panic(exception.NewNotFoundError("file not found"))
+		}
+
+		writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		writer.Header().Set("Pragma", "no-cache")
+
+		http.ServeFile(writer, request, filePath)
+	}
+}
